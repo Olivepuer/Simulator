@@ -36,16 +36,17 @@ const TICKET_TTL    = 30;        // Seconds before a ticket auto-expires
  * Displays UTC time in Bloomberg style.
  */
 function startClock() {
- function tick() {
+function tick() {
     const now = new Date();
     const pad = n => String(n).padStart(2, "0");
     const nyc = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
-    const hours = pad(nyc.getHours());
+    const rawHours = nyc.getHours();
+    const hours = pad(rawHours % 12 || 12);
     const minutes = pad(nyc.getMinutes());
     const seconds = pad(nyc.getSeconds());
-    const ampm = nyc.getHours() >= 12 ? "PM" : "AM";
-    document.getElementById("header-clock").textContent =
-      `${hours}:${minutes}:${seconds} ${ampm} ET`;
+    const ampm = rawHours >= 12 ? "PM" : "AM";
+    const clockEl = document.getElementById("header-clock");
+    if (clockEl) clockEl.textContent = `${hours}:${minutes}:${seconds} ${ampm} ET`;
   }
   tick();
   setInterval(tick, 1000);
@@ -179,9 +180,9 @@ function startTicketCountdown(ticketId) {
  */
 function removeTicket(ticketId) {
   clearInterval(ticketTimerIntervals[ticketId]);
-  ete ticketTimerIntervals[ticketId];
-  ete ticketTimers[ticketId];
-  ete chatHistories[ticketId];
+  delete ticketTimerIntervals[ticketId];
+  delete ticketTimers[ticketId];
+  delete chatHistories[ticketId];
 
   activeTickets = activeTickets.filter(t => t.ticket_id !== ticketId);
   renderTicketQueue();
