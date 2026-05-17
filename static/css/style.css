@@ -450,9 +450,10 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--bb-gray);
-  font-size: 20px;
-  opacity: 0.3;
+  color: var(--bb-gray-lt);
+  font-size: 11px;
+  letter-spacing: 1px;
+  opacity: 0.5;
 }
 
 #profile-info {
