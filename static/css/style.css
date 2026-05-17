@@ -809,4 +809,65 @@ display: none;
   transition: background 0.15s;
 }
 
+/* ── Greeting Timer Bar ─────────────────────────────────── */
+#greeting-timer-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 14px;
+  background: #0d0d0d;
+  border-bottom: 1px solid var(--bb-border);
+  flex-shrink: 0;
+}
+
+#greeting-timer-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--bb-gray-lt);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+#greeting-timer-display {
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--bb-orange);
+  min-width: 30px;
+  text-align: center;
+}
+
+#greeting-timer-display.urgent {
+  color: var(--bb-red);
+  animation: blink 0.5s infinite;
+}
+
+#greeting-timer-track {
+  flex: 1;
+  height: 4px;
+  background: #2a2a2a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+#greeting-timer-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--bb-orange);
+  transition: width 1s linear, background 0.3s;
+  border-radius: 2px;
+}
+
+/* System messages in chat */
+.msg.system-msg {
+  align-self: center;
+  background: #1a0a00;
+  border: 1px solid var(--bb-red);
+  color: var(--bb-red);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 5px 14px;
+  text-align: center;
+  max-width: 90%;
+}
+
 #settings-update-btn:hover { background: var(--bb-amber); }
