@@ -162,12 +162,14 @@ function startTicketCountdown(ticketId) {
   ticketTimerIntervals[ticketId] = setInterval(() => {
     ticketTimers[ticketId]--;
 
-    // Update the timer display on the card
+    // Update the timer display on the card only if ticket hasn't been selected yet
     const timerEl = document.getElementById(`timer-${ticketId}`);
-    if (timerEl) {
+    if (timerEl && selectedTicket !== ticketId) {
       timerEl.textContent = ticketTimers[ticketId] + "s";
       // Highlight red/yellow when urgent
       timerEl.className = "ticket-timer" + (ticketTimers[ticketId] <= 10 ? " urgent" : "");
+    } else if (timerEl && selectedTicket === ticketId) {
+      timerEl.style.display = "none";
     }
 
     // Time's up — remove ticket
@@ -235,10 +237,14 @@ function renderTicketQueue() {
     card.id = `card-${ticket.ticket_id}`;
     card.onclick = () => openTicket(ticket.ticket_id);
 
+    // Only show timer if ticket hasn't been clicked into yet
+    const isSelected = selectedTicket === ticket.ticket_id;
+    const timerHTML = isSelected ? "" : `<div class="ticket-timer" id="timer-${ticket.ticket_id}">${ticketTimers[ticket.ticket_id]}s</div>`;
+
     card.innerHTML = `
       <div class="ticket-bucket">${ticket.bucket}</div>
       <div class="ticket-id">${ticket.ticket_id}</div>
-      <div class="ticket-timer" id="timer-${ticket.ticket_id}">${ticketTimers[ticket.ticket_id]}s</div>
+      ${timerHTML}
     `;
 
     queueEl.appendChild(card);
