@@ -81,6 +81,15 @@ function setStatus(status) {
     activeTickets.forEach(t => removeTicket(t.ticket_id));
     activeTickets = [];
     updateTicketCountDisplay();
+    selectedTicket = null;
+    showChatPlaceholder();
+    // Hide right panel completely and reset profile
+    const rightPanel = document.getElementById("right-panel");
+    if (rightPanel) rightPanel.style.display = "none";
+    const info = document.getElementById("profile-info");
+    const placeholder = document.getElementById("profile-placeholder");
+    if (info) info.style.display = "none";
+    if (placeholder) placeholder.style.display = "flex";
   }
 
   // Restart the poll loop so the new chance takes effect immediately
