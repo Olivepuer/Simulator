@@ -21,6 +21,7 @@ let ticketTimers   = {};         // { ticket_id: remainingSeconds }
 let chatHistories  = {};         // { ticket_id: [ {role, content} ] }
 let ticketTimerIntervals = {};   // { ticket_id: setIntervalId } for countdown ticks
 let pollInterval   = null;       // Interval that tries to spawn new tickets
+let openedTickets  = new Set();  // Tracks which tickets have been clicked into
 
 // Chance per second for a new ticket by status
 const TICKET_CHANCE = { hit: 0.05, add: 0.01, hold: 0, del: 0 };
@@ -194,6 +195,7 @@ function removeTicket(ticketId) {
   delete ticketTimerIntervals[ticketId];
   delete ticketTimers[ticketId];
   delete chatHistories[ticketId];
+  openedTickets.delete(ticketId);
 
   activeTickets = activeTickets.filter(t => t.ticket_id !== ticketId);
   renderTicketQueue();
@@ -237,9 +239,9 @@ function renderTicketQueue() {
     card.id = `card-${ticket.ticket_id}`;
     card.onclick = () => openTicket(ticket.ticket_id);
      
-    // Only show timer if ticket hasn't been clicked into yet
-    const isOpened = !ticketTimerIntervals[ticket.ticket_id];
-    const timerHTML = isOpened ? "" : `<div class="ticket-timer" id="timer-${ticket.ticket_id}">${ticketTimers[ticket.ticket_id]}s</div>`;
+    // A ticket is "opened" if it has been clicked into
+    const isOpened = openedTickets.has(ticket.ticket_id);
+    const timerHTML = isOpened ? "" : `<div class="ticket-timer" id="timer-${ticket.ticket_id}">${ticketTimers[ticket.ticket_id] || ""}s</div>`;
 
     card.innerHTML = `
       <div class="ticket-bucket">${ticket.bucket}</div>
@@ -247,13 +249,12 @@ function renderTicketQueue() {
       ${timerHTML}
     `;
 
-    // Stop flashing if ticket has been opened
+    // Stop flashing only if ticket has been explicitly opened
     if (isOpened) {
       card.style.animation = "none";
       card.style.background = "#3a0a00";
       card.style.borderColor = "var(--bb-orange)";
     }
-
     queueEl.appendChild(card);
   });
 }
@@ -271,12 +272,14 @@ function openTicket(ticketId) {
   const ticket = activeTickets.find(t => t.ticket_id === ticketId);
   if (!ticket) return;
 
+ // Mark ticket as opened so it stops flashing and hides timer
+  openedTickets.add(ticketId);
+
   // Stop the left panel countdown — ticket is now locked in
   if (ticketTimerIntervals[ticketId]) {
     clearInterval(ticketTimerIntervals[ticketId]);
     delete ticketTimerIntervals[ticketId];
   }
-
   // Hide the left panel timer display
   const timerEl = document.getElementById(`timer-${ticketId}`);
   if (timerEl) timerEl.style.display = "none";
