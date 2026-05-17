@@ -362,10 +362,19 @@ function sendMessage() {
 
   inputEl.value = "";
 
-  // CLOSE command — removes the ticket entirely
+ // CLOSE command — removes the ticket entirely
   if (text === "{CLOSE}") {
     stopGreetingTimer();
     removeTicket(selectedTicket);
+    selectedTicket = null;
+    showChatPlaceholder();
+    // Hide right panel and reset profile
+    const rightPanel = document.getElementById("right-panel");
+    if (rightPanel) rightPanel.style.display = "none";
+    const info = document.getElementById("profile-info");
+    const placeholder = document.getElementById("profile-placeholder");
+    if (info) info.style.display = "none";
+    if (placeholder) placeholder.style.display = "flex";
     return;
   }
 
