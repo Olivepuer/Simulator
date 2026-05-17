@@ -422,18 +422,29 @@ function renderChatHistory(ticketId) {
  * Populates the right panel with the given customer profile.
  */
 function loadProfile(profile) {
+  // Show the right panel
   const rightPanel = document.getElementById("right-panel");
-  if (rightPanel) {
-    rightPanel.style.display = "flex";
-    rightPanel.style.flexDirection = "column";
-  }
-  document.getElementById("p-name").textContent     = profile.name;
-  document.getElementById("p-position").textContent = profile.position;
-  document.getElementById("p-firm").textContent      = profile.firm;
-  document.getElementById("p-uid").textContent       = profile.uid;
-  document.getElementById("p-language").textContent  = profile.language;
-  document.getElementById("p-city").textContent      = profile.city;
-  document.getElementById("p-country").textContent   = profile.country;
+  rightPanel.style.display = "flex";
+  rightPanel.style.flexDirection = "column";
+
+  // Hide placeholder, show info
+  const placeholder = document.getElementById("profile-placeholder");
+  const info = document.getElementById("profile-info");
+
+  if (placeholder) placeholder.style.display = "none";
+  if (info) info.style.display = "flex";
+  info.style.flexDirection = "column";
+
+  // Populate fields — log to console so we can verify data is arriving
+  console.log("Loading profile:", profile);
+
+  document.getElementById("p-name").textContent     = profile.name     || "N/A";
+  document.getElementById("p-position").textContent = profile.position || "N/A";
+  document.getElementById("p-firm").textContent     = profile.firm     || "N/A";
+  document.getElementById("p-uid").textContent      = profile.uid      || "N/A";
+  document.getElementById("p-language").textContent = profile.language || "N/A";
+  document.getElementById("p-city").textContent     = profile.city     || "N/A";
+  document.getElementById("p-country").textContent  = profile.country  || "N/A";
 }
 
 /**
