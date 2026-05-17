@@ -491,6 +491,8 @@ display: none;
   flex-direction: column;
   padding: 5px 12px;
   border-bottom: 1px solid #1e1e1e;
+  min-height: 42px;
+  justify-content: center;
 }
 
 .profile-label {
@@ -518,10 +520,7 @@ display: none;
 }
 
 .profile-divider {
-  height: 1px;
-  background: var(--bb-orange);
-  opacity: 0.3;
-  margin: 6px 12px;
+ display: none;
 }
 
 /* Action buttons: UUID, PROS, APIY */
