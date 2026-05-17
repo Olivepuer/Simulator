@@ -236,16 +236,23 @@ function renderTicketQueue() {
     card.className = "ticket-card" + (selectedTicket === ticket.ticket_id ? " selected" : "");
     card.id = `card-${ticket.ticket_id}`;
     card.onclick = () => openTicket(ticket.ticket_id);
-
+     
     // Only show timer if ticket hasn't been clicked into yet
-    const isSelected = selectedTicket === ticket.ticket_id;
-    const timerHTML = isSelected ? "" : `<div class="ticket-timer" id="timer-${ticket.ticket_id}">${ticketTimers[ticket.ticket_id]}s</div>`;
+    const isOpened = !ticketTimerIntervals[ticket.ticket_id];
+    const timerHTML = isOpened ? "" : `<div class="ticket-timer" id="timer-${ticket.ticket_id}">${ticketTimers[ticket.ticket_id]}s</div>`;
 
     card.innerHTML = `
       <div class="ticket-bucket">${ticket.bucket}</div>
       <div class="ticket-id">${ticket.ticket_id}</div>
       ${timerHTML}
     `;
+
+    // Stop flashing if ticket has been opened
+    if (isOpened) {
+      card.style.animation = "none";
+      card.style.background = "#3a0a00";
+      card.style.borderColor = "var(--bb-orange)";
+    }
 
     queueEl.appendChild(card);
   });
