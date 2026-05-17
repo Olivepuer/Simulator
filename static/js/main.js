@@ -2,7 +2,7 @@
    Bloomberg Help Desk Training Simulator — main.js
    Handles:
      • Live clock display
-     • Status button management (Hit / Add / Hold / Del)
+     • Status button management (Hit / Add / Hold / )
      • Ticket generation via backend API
      • 30-second countdown timers per ticket
      • Ticket selection and chat routing
@@ -36,11 +36,16 @@ const TICKET_TTL    = 30;        // Seconds before a ticket auto-expires
  * Displays UTC time in Bloomberg style.
  */
 function startClock() {
-  function tick() {
+ function tick() {
     const now = new Date();
     const pad = n => String(n).padStart(2, "0");
+    const nyc = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+    const hours = pad(nyc.getHours());
+    const minutes = pad(nyc.getMinutes());
+    const seconds = pad(nyc.getSeconds());
+    const ampm = nyc.getHours() >= 12 ? "PM" : "AM";
     document.getElementById("header-clock").textContent =
-      `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())} UTC`;
+      `${hours}:${minutes}:${seconds} ${ampm} ET`;
   }
   tick();
   setInterval(tick, 1000);
@@ -174,9 +179,9 @@ function startTicketCountdown(ticketId) {
  */
 function removeTicket(ticketId) {
   clearInterval(ticketTimerIntervals[ticketId]);
-  delete ticketTimerIntervals[ticketId];
-  delete ticketTimers[ticketId];
-  delete chatHistories[ticketId];
+  ete ticketTimerIntervals[ticketId];
+  ete ticketTimers[ticketId];
+  ete chatHistories[ticketId];
 
   activeTickets = activeTickets.filter(t => t.ticket_id !== ticketId);
   renderTicketQueue();
@@ -491,5 +496,5 @@ function escapeHtml(str) {
  */
 (function init() {
   startClock();
-  setStatus("hit");   // Default status on load
+  setStatus("del");   // Default status on load
 })();
