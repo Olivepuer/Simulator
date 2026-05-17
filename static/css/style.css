@@ -529,10 +529,13 @@ display: none;
   display: flex;
   flex-direction: row;
   gap: 4px;
-  padding: 12px 10px;
+  padding: 8px 10px;
   margin-top: auto;
   background: var(--bb-dark);
   border-top: 1px solid var(--bb-border);
+  height: 50px;
+  box-sizing: border-box;
+  align-items: center;
 }
 
 .profile-action-btn {
@@ -543,7 +546,6 @@ display: none;
   border: 1px solid var(--bb-border-lite);
   font-family: var(--font-mono);
   font-size: 10px;
-  height: 20px;
   font-weight: bold;
   letter-spacing: 1px;
   cursor: pointer;
