@@ -258,6 +258,16 @@ function openTicket(ticketId) {
   const ticket = activeTickets.find(t => t.ticket_id === ticketId);
   if (!ticket) return;
 
+  // Stop the left panel countdown — ticket is now locked in
+  if (ticketTimerIntervals[ticketId]) {
+    clearInterval(ticketTimerIntervals[ticketId]);
+    delete ticketTimerIntervals[ticketId];
+  }
+
+  // Hide the left panel timer display
+  const timerEl = document.getElementById(`timer-${ticketId}`);
+  if (timerEl) timerEl.style.display = "none";
+
   // Update selected state
   selectedTicket = ticketId;
 
@@ -283,6 +293,7 @@ function openTicket(ticketId) {
   // If this is a brand-new ticket with no messages yet, send the AI opening question
   if (chatHistories[ticketId].length === 0) {
     sendClientOpener(ticket);
+    startGreetingTimer();  // Start 30s greeting countdown
   }
 }
 
@@ -335,8 +346,20 @@ function sendMessage() {
 
   inputEl.value = "";
 
+  // CLOSE command — removes the ticket entirely
+  if (text === "{CLOSE}") {
+    stopGreetingTimer();
+    removeTicket(selectedTicket);
+    return;
+  }
+
   const ticket = activeTickets.find(t => t.ticket_id === selectedTicket);
   if (!ticket) return;
+
+  // If this is the first rep message, stop the greeting timer
+  if (chatHistories[selectedTicket].length === 1) {
+    stopGreetingTimer();
+  }
 
   // Add rep message to history (role "user" = trainee in our prompt)
   chatHistories[selectedTicket].push({ role: "user", content: text });
@@ -508,6 +531,81 @@ function escapeHtml(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+// ─────────────────────────────────────────────
+//  GREETING TIMER
+//  Starts when a ticket is opened.
+//  Rep has 30 seconds to send their first message.
+//  Counts down in the middle panel header bar.
+// ─────────────────────────────────────────────
+
+let greetingTimerInterval = null;  // Interval ID for the greeting countdown
+let greetingSeconds       = 30;    // Countdown starting value
+
+/**
+ * Starts the 30-second greeting timer in the chat header.
+ * Clears any existing greeting timer first.
+ */
+function startGreetingTimer() {
+  stopGreetingTimer();
+  greetingSeconds = 30;
+
+  // Show the greeting timer bar
+  const bar = document.getElementById("greeting-timer-bar");
+  const display = document.getElementById("greeting-timer-display");
+  if (bar) bar.classList.remove("hidden");
+  if (display) display.textContent = greetingSeconds + "s";
+
+  greetingTimerInterval = setInterval(() => {
+    greetingSeconds--;
+
+    if (display) {
+      display.textContent = greetingSeconds + "s";
+      // Turn red when urgent
+      display.className = greetingSeconds <= 10 ? "urgent" : "";
+    }
+
+    // Update the progress bar fill
+    const fill = document.getElementById("greeting-timer-fill");
+    if (fill) {
+      const pct = (greetingSeconds / 30) * 100;
+      fill.style.width = pct + "%";
+      fill.style.background = greetingSeconds <= 10 ? "var(--bb-red)" : "var(--bb-orange)";
+    }
+
+    if (greetingSeconds <= 0) {
+      stopGreetingTimer();
+      // Flash warning in chat
+      appendSystemMessage("⚠ GREETING TIME EXPIRED — Client expects a response!");
+    }
+  }, 1000);
+}
+
+/**
+ * Stops and hides the greeting timer.
+ */
+function stopGreetingTimer() {
+  if (greetingTimerInterval) {
+    clearInterval(greetingTimerInterval);
+    greetingTimerInterval = null;
+  }
+  const bar = document.getElementById("greeting-timer-bar");
+  if (bar) bar.classList.add("hidden");
+}
+
+/**
+ * Appends a system message (not client or rep) into the chat.
+ * Used for warnings and notifications.
+ */
+function appendSystemMessage(text) {
+  const container = document.getElementById("chat-messages");
+  if (!container) return;
+  const msg = document.createElement("div");
+  msg.className = "msg system-msg";
+  msg.textContent = text;
+  container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
 }
 
 // ─────────────────────────────────────────────
