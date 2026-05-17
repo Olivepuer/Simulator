@@ -204,11 +204,9 @@ html, body {
 }
 
 @keyframes ticketFlash {
-  0%   { background: #cc2200; border-color: #ff4422; }
-  49%  { background: #cc2200; border-color: #ff4422; }
-  50%  { background: #ffffff; border-color: #ffffff; }
-  99%  { background: #ffffff; border-color: #ffffff; }
-  100% { background: #cc2200; border-color: #ff4422; }
+  0%   { background: #8b0000; border-color: #cc2200; }
+  50%  { background: #cc2200; border-color: #ff4422; }
+  100% { background: #8b0000; border-color: #cc2200; }
 }
 
 .ticket-bucket {
