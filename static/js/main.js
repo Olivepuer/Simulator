@@ -393,7 +393,8 @@ function sendMessage() {
   // Show typing indicator while waiting for AI
   document.getElementById("typing-indicator").classList.remove("hidden");
 
-  // Call the backend AI proxy
+  // Call the backend AI proxy — log history for debugging
+  console.log("Sending history:", chatHistories[selectedTicket]);
   fetch("/api/ai_response", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
