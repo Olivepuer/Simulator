@@ -101,7 +101,7 @@ html, body {
 /* ── Main Layout — flex row ─────────────────────────────── */
 #main-layout {
   display: flex;
-  height: calc(100vh - 32px - 22px); /* full height minus header and status bar */
+  height: calc(100vh - 34px);
   width: 100%;
   overflow: hidden;
 }
@@ -554,7 +554,11 @@ display: none;
 
 /* ── Status Bar (bottom) ──────────────────────────────── */
 #status-bar {
-display: none;
+  display: none;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
 #status-bar strong {
