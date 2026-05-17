@@ -422,9 +422,11 @@ function renderChatHistory(ticketId) {
  * Populates the right panel with the given customer profile.
  */
 function loadProfile(profile) {
-  document.getElementById("profile-placeholder").classList.add("hidden");
-  document.getElementById("profile-info").classList.remove("hidden");
-
+  const rightPanel = document.getElementById("right-panel");
+  if (rightPanel) {
+    rightPanel.style.display = "flex";
+    rightPanel.style.flexDirection = "column";
+  }
   document.getElementById("p-name").textContent     = profile.name;
   document.getElementById("p-position").textContent = profile.position;
   document.getElementById("p-firm").textContent      = profile.firm;
