@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bloomberg Help Desk — Training Simulator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       TOP HEADER BAR — mimics Bloomberg terminal bar
+  ═══════════════════════════════════════════════ -->
+  <div id="header-bar">
+    <span id="header-logo">WorkCenter — v.Test</span>
+    <span id="header-clock"></span>  <!-- Live clock injected by JS -->
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       MAIN THREE-PANEL LAYOUT
+  ═══════════════════════════════════════════════ -->
+  <div id="main-layout">
+
+    <!-- ───────────────────────────────────────────
+         LEFT PANEL — Ticket Queue
+    ─────────────────────────────────────────────-->
+    <div id="left-panel">
+
+      <!-- Status buttons row -->
+      <div id="status-buttons">
+        <span id="ticketing-label">Ticketing</span>
+        <button class="status-btn" id="btn-hit"  onclick="setStatus('hit')">Hit</button>
+        <button class="status-btn" id="btn-add"  onclick="setStatus('add')">Add</button>
+        <button class="status-btn" id="btn-hold" onclick="setStatus('hold')">Hold</button>
+        <button class="status-btn" id="btn-del"  onclick="setStatus('del')">Del</button>
+      </div>
+
+      <!-- Ticket slots container — up to 3 tickets render here -->
+      <div id="ticket-queue">
+        <div id="no-tickets-msg">No active tickets</div>
+      </div>
+
+    </div><!-- /left-panel -->
+
+    <!-- ───────────────────────────────────────────
+         MIDDLE PANEL — Chat Area
+    ─────────────────────────────────────────────-->
+    <div id="middle-panel">
+
+      <!-- Shown when no ticket is selected -->
+      <div id="chat-placeholder">
+        <div id="placeholder-inner">
+          <span id="placeholder-logo">◈</span>
+          <p>Select a ticket from the queue to begin</p>
+        </div>
+      </div>
+
+      <!-- Chat window — shown when a ticket is active -->
+      <div id="chat-area" class="hidden">
+
+        <!-- Ticket meta bar at top of chat -->
+        <div id="chat-header">
+          <span id="chat-ticket-id"></span>
+          <span id="chat-bucket-badge"></span>
+          <span id="chat-client-name"></span>
+        </div>
+
+        <!-- Scrollable message history -->
+        <div id="chat-messages"></div>
+
+        <!-- Typing indicator -->
+        <div id="typing-indicator" class="hidden">
+          <span></span><span></span><span></span>
+        </div>
+
+        <!-- Input area -->
+        <div id="chat-input-row">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Type your response to the client..."
+            onkeydown="handleChatKey(event)"
+            autocomplete="off"
+          />
+          <button id="send-btn" onclick="sendMessage()">SEND</button>
+        </div>
+
+      </div><!-- /chat-area -->
+
+    </div><!-- /middle-panel -->
+
+    <!-- ───────────────────────────────────────────
+         RIGHT PANEL — Customer Info
+    ─────────────────────────────────────────────-->
+    <div id="right-panel">
+
+      <div id="right-panel-header">CLIENT PROFILE</div>
+
+      <!-- Shown when no ticket selected -->
+      <div id="profile-placeholder">—</div>
+
+      <!-- Customer info block — shown when ticket selected -->
+      <div id="profile-info" class="hidden">
+        <div class="profile-row">
+          <span class="profile-label">NAME</span>
+          <span class="profile-value" id="p-name"></span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">POSITION</span>
+          <span class="profile-value" id="p-position"></span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">FIRM</span>
+          <span class="profile-value" id="p-firm"></span>
+        </div>
+        <div class="profile-divider"></div>
+        <div class="profile-row">
+          <span class="profile-label">UUID</span>
+          <span class="profile-value mono" id="p-uid"></span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">LANGUAGE</span>
+          <span class="profile-value" id="p-language"></span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">CITY</span>
+          <span class="profile-value" id="p-city"></span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-label">COUNTRY</span>
+          <span class="profile-value" id="p-country"></span>
+        </div>
+
+        <!-- Action buttons row -->
+        <div id="profile-action-btns">
+          <button class="profile-action-btn" onclick="profileAction('UUID')">UUID</button>
+          <button class="profile-action-btn" onclick="profileAction('PROS')">PROS</button>
+          <button class="profile-action-btn" onclick="profileAction('APIY')">APIY</button>
+        </div>
+      </div><!-- /profile-info -->
+
+    </div><!-- /right-panel -->
+
+  </div><!-- /main-layout -->
+
+  <!-- Status bar at very bottom -->
+  <div id="status-bar">
+    <span id="status-mode-label">STATUS: <strong id="current-status-text">HIT</strong></span>
+    <span id="status-bar-mid">BLOOMBERG L.P. — INTERNAL TRAINING USE ONLY</span>
+    <span id="status-ticket-count">TICKETS: <strong id="ticket-count-num">0</strong>/3</span>
+  </div>
+
+  <!-- JS logic -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
