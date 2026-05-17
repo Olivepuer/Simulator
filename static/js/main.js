@@ -310,6 +310,9 @@ function openTicket(ticketId) {
   if (chatHistories[ticketId].length === 0) {
     sendClientOpener(ticket);
     startGreetingTimer();  // Start 30s greeting countdown
+  } else if (chatHistories[ticketId].length === 1) {
+    // Ticket has been seen but not yet responded to — resume timer where it left off
+    resumeGreetingTimer();
   }
 }
 
@@ -618,6 +621,23 @@ function stopGreetingTimer() {
   }
   const bar = document.getElementById("greeting-timer-bar");
   if (bar) bar.classList.add("hidden");
+}
+
+/**
+ * Resumes showing the greeting timer bar without resetting it.
+ * Called when switching back to a ticket that hasn't been greeted yet.
+ */
+function resumeGreetingTimer() {
+  const bar = document.getElementById("greeting-timer-bar");
+  const display = document.getElementById("greeting-timer-display");
+  const fill = document.getElementById("greeting-timer-fill");
+
+  // Only show if timer is still running
+  if (greetingTimerInterval && bar) {
+    bar.classList.remove("hidden");
+    if (display) display.textContent = greetingSeconds + "s";
+    if (fill) fill.style.width = ((greetingSeconds / 30) * 100) + "%";
+  }
 }
 
 /**
