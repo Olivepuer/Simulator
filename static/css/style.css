@@ -149,7 +149,7 @@ html, body {
 /* Active state styles — set by JS via class */
 .status-btn.active-hit  { background: var(--bb-blue);  color: #fff; border-color: var(--bb-blue); }
 .status-btn.active-add  { background: var(--bb-green); color: #fff; border-color: var(--bb-green); }
-.status-btn.active-hold { background: var(--bb-green); color: #fff; border-color: var(--bb-green); }
+.status-btn.active-hold { background: var(--bb-amber); color: #fff; border-color: var(--bb-amber); }
 .status-btn.active-del  { background: var(--bb-red);   color: #fff; border-color: var(--bb-red); }
 
 /* Ticket Queue */
